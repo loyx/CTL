@@ -7,8 +7,6 @@ project(CTLCompiler)
 if (DEBUG)
     message("Enable debug mode")
     add_compile_definitions(DEBUG)
-
-    find_package(spdlog REQUIRED)
 endif ()
 
 set(CMAKE_CXX_STANDARD 17)
@@ -36,7 +34,3 @@ add_executable(ctlc main.cpp
         ${ANTLR_CTLLexer_CXX_OUTPUTS}
         ${ANTLR_CTLParser_CXX_OUTPUTS})
 target_link_libraries(ctlc antlr4_static)
-
-if (DEBUG)
-    target_link_libraries(ctlc spdlog::spdlog)
-endif ()

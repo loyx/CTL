@@ -51,5 +51,6 @@ for example_path in include_paths:
     test_files = list(testFileGen(example_path))
     console.print(Panel("\n".join(test_files), title="test dir: " + example_path, safe_box=False, border_style='green'))
     for file in test_files:
-        result = subprocess.run([os.path.join(cmake_output, 'ctlc'), file], stdout=subprocess.PIPE, text=True)
-        console.print(Panel(escape(result.stdout), highlight=True, title=file, safe_box=False, border_style='blue'))
+        result = subprocess.run([os.path.join(cmake_output, 'ctlc'), file], capture_output=True, text=True)
+        console.print(Panel(escape(result.stdout), highlight=True, title=file + " stdout", safe_box=False, border_style='blue'))
+        console.print(Panel(escape(result.stderr), highlight=True, title=file + " stderr", safe_box=False, border_style='red'))

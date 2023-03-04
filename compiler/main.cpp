@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include "antlr4-runtime.h"
 #include "CTLLexer.h"
 #include "CTLParser.h"
@@ -12,9 +13,24 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < argc; ++i){
         std::cout <<i << ": " << argv[i] << std::endl;
     }
+    std::cout << std::endl;
 #endif
 
-    ANTLRInputStream input("a123");
+    std::ifstream inputFile(argv[1]);
+    std::stringstream buffer;
+    if (inputFile.is_open()){
+        buffer << inputFile.rdbuf();
+
+#ifdef DEBUG
+        std::string content = buffer.str();
+        std::cout << content << std::endl;
+#endif
+
+        inputFile.close();
+    }
+    std::string content = buffer.str();
+
+    ANTLRInputStream input(content);
     CTLLexer lexer(&input);
     CommonTokenStream tokens(&lexer);
     tokens.fill();
