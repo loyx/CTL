@@ -1,26 +1,22 @@
 import os
 import subprocess
 
-from rich import inspect
-from rich.panel import Panel
 from rich.console import Console
-from rich.rule import Rule
-from rich.style import Style
-from rich.box import ROUNDED
 from rich.markup import escape
-from rich.text import Text
+from rich.panel import Panel
 
-console = Console()
 
+debug = True
 cmake_file = os.path.join('..', 'compiler')
 cmake_output = os.path.join('.', 'cmake-build-debug')
 target = "ctlc"
 
+console = Console()
 # build
 cmd_seq = [
     "set HTTP_PROXY=http://localhost:1080",
     f"set HTTPS_PROXY=https://localhost:1080",
-    f"cmake -G Ninja -S {cmake_file} -B {cmake_output}",
+    f"cmake -G Ninja -S {cmake_file} -B {cmake_output} -D DEBUG={'ON' if debug else 'OFF'}",
     f"cmake --build {cmake_output} --target {target} -j 16",
 ]
 
