@@ -88,8 +88,22 @@ Identifier
     : Letter LetterOrDigit*
     ;
 
+// NEWLINE
+NEWLINE
+    : ('\r'? '\n' | '\r' | '\f') SPACES? {
+        std::cout << "new line!" << std::endl;
+    }
+    ;
+
+// Whitespace
+SKIP_: (SPACES) -> channel(HIDDEN);
 
 // fragments
+
+fragment
+SPACES
+    : [ \t]+
+    ;
 
 fragment
 StringElement
