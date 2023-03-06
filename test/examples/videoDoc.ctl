@@ -6,8 +6,6 @@ CrowdTask VideoDoc {
         Date: 
             FromNowTo(2023/3/30)
         
-    ]
-
     comupte main():Void = {
         CrowdSO.save("./data", ExtractSummary.returnData)
     }
