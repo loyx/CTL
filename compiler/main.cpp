@@ -36,8 +36,11 @@ int main(int argc, char* argv[]) {
     tokens.fill();
 
 #ifdef DEBUG
+    auto vocab = lexer.getVocabulary();
     for (const auto &token: tokens.getTokens()){
-        std::cout << token->toString() << std::endl;
+        std::cout << token->toString()
+        << " " << vocab.getDisplayName(token->getType())
+        << std::endl;
     }
 #endif
 
