@@ -51,4 +51,5 @@ for example_path in include_paths:
     for file in test_files:
         result = subprocess.run([os.path.join(cmake_output, 'ctlc'), file], capture_output=True, text=True)
         console.print(Panel(escape(result.stdout), highlight=True, title=file + " stdout", safe_box=False, border_style='blue'))
-        console.print(Panel(escape(result.stderr), highlight=True, title=file + " stderr", safe_box=False, border_style='red'))
+        if result.stderr:
+            console.print(Panel(escape(result.stderr), highlight=True, title=file + " stderr", safe_box=False, border_style='red'))
