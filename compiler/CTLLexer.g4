@@ -30,7 +30,7 @@ std::unique_ptr<antlr4::CommonToken> cloneToken(const std::unique_ptr<antlr4::To
 }
 
 std::unique_ptr<antlr4::Token> createDedent(int indent) {
-    std::unique_ptr<antlr4::CommonToken> dedent = commonToken(ctlParser::CTLParser::DEDENT,
+    std::unique_ptr<antlr4::CommonToken> dedent = commonToken(ctlFront::CTLParser::DEDENT,
         ">"+std::to_string(indent)+">");
     return dedent;
 }
@@ -206,7 +206,7 @@ NEWLINE
                     emit(commonToken(NEWLINE, ";" + newline));
                     m_indents.push(indent);
                     emit(commonToken(SKIP_, spaces));
-                    emit(commonToken(ctlParser::CTLParser::INDENT, "<"+ std::to_string(indent)+"<"));
+                    emit(commonToken(ctlFront::CTLParser::INDENT, "<"+ std::to_string(indent)+"<"));
                 } else {
                     emit(commonToken(NEWLINE, ";" + newline));
                     while (!m_indents.empty() && m_indents.top() > indent) {

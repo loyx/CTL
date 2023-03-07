@@ -5,7 +5,7 @@
 #include "CTLParser.h"
 
 using namespace antlr4;
-using namespace ctlLexer;
+using namespace ctlFront;
 
 int main(int argc, char* argv[]) {
 
