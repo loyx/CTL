@@ -41,6 +41,12 @@ int main(int argc, char* argv[]) {
     for (auto &item: tokens.getTokens()) {
         std::cout << item->getText();
     }
+    std::cout << "Compressed ctl:" << std::endl;
+    for (auto &item: tokens.getTokens()) {
+        if ((item->getType() == lexer.getTokenType("SKIP_")))
+            continue;
+        std::cout << item->getText();
+    }
 
 //    auto vocab = lexer.getVocabulary();
 //    for (const auto &token: tokens.getTokens()){

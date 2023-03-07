@@ -30,9 +30,8 @@ std::unique_ptr<antlr4::CommonToken> cloneToken(const std::unique_ptr<antlr4::To
 }
 
 std::unique_ptr<antlr4::Token> createDedent(int indent) {
-    std::string spaces(indent, ' ');
     std::unique_ptr<antlr4::CommonToken> dedent = commonToken(ctlParser::CTLParser::DEDENT,
-        spaces + "}"+std::to_string(indent)+"}\n");
+        ">"+std::to_string(indent)+">");
     return dedent;
 }
 
@@ -72,6 +71,7 @@ std::unique_ptr<antlr4::Token> nextToken() override {
         // Now emit as much DEDENT tokens as needed.
         while (!m_indents.empty()) {
             emit(createDedent(0));
+            emit(commonToken(SKIP_, "\n"));
             m_indents.pop();
         }
 
@@ -104,8 +104,8 @@ Class: 'class';
 // Separator
 LPAREN: '(' {m_opened++;};
 RPAREN: ')' {m_opened--;};
-LBRACE: '{' {m_opened++;};
-RBRACE: '}' {m_opened--;};
+LBRACE: '{' {/*m_opened++;*/};
+RBRACE: '}' {/*m_opened--;*/};
 LBRACK: '[' {m_opened++;};
 RBRACK: ']' {m_opened--;};
 //SEMI: ';';
@@ -191,29 +191,28 @@ NEWLINE
                     spaces.push_back(c);
                 }
             }
-//            std::cout << newline.length() << " - " << spaces.length() << std::endl;
             int next = _input->LA(1);
             int nextnext = _input->LA(2);
-            if (m_opened != 1 || (nextnext != -1 && (next == '\r' || next == '\n' ||next == '\f' ||next == '#' ) ) ) {
+            if (m_opened > 0 || (nextnext != -1 && (next == '\r' || next == '\n' ||next == '\f' ||next == '#' ) ) ) {
                 // The part of the block that requires indentation to distinguish code exists
                 // only within the CrowdTask, where m_opened is 1
-//                skip();
-                emit(commonToken(NEWLINE, newline));
-//                emit(commonToken(SKIP_, spaces));
+                emit(commonToken(SKIP_, newline));
             } else {
-//                std::cout<< "need Indent or Dedent" << std::endl;
-                emit(commonToken(NEWLINE, newline));
                 int indent = getIndentationCount(spaces);
                 int previous = m_indents.empty() ? 0 : m_indents.top();
                 if (indent == previous){
-                    emit(commonToken(SKIP_, spaces));
-//                    skip();
+                    emit(commonToken(SKIP_, text));
                 } else if(indent > previous) {
+                    emit(commonToken(NEWLINE, ";" + newline));
                     m_indents.push(indent);
-                    emit(commonToken(ctlParser::CTLParser::INDENT, spaces+"{"+ std::to_string(indent)+"{"));
+                    emit(commonToken(SKIP_, spaces));
+                    emit(commonToken(ctlParser::CTLParser::INDENT, "<"+ std::to_string(indent)+"<"));
                 } else {
+                    emit(commonToken(NEWLINE, ";" + newline));
                     while (!m_indents.empty() && m_indents.top() > indent) {
+                        emit(commonToken(SKIP_, std::string(m_indents.top(), ' ')));
                         emit(createDedent(m_indents.top()));
+                        emit(commonToken(SKIP_, "\n"));
                         m_indents.pop();
                     }
                     emit(commonToken(SKIP_, std::string(indent, ' ')));
